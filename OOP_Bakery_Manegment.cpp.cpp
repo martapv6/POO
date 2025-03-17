@@ -1,9 +1,4 @@
-#include <iostream>//probleme la cout produs imi mananca prima litera
-//de la nume recolvat dar am scos in.getline()
-//problema2 la concatenarea + a cuptorului nu da bine la afisare
-//problema 3 operatorul + intre 2 clase diferite trebuie in afara claselor si
-//trecute cu friend
-// functionalitate client sa o treci cu :: ca  ai uitat
+#include <iostream>
 #include <cstring>
 #include <vector>
 #include <string.h>
