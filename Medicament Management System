@@ -1,1 +1,698 @@
-This project is a C++ console application designed to manage various types of medicines, including syrups, pills, and antibiotics. The program provides functionalities for adding, displaying, and managing medications while ensuring an OOP (Object-Oriented Programming) structure.
+#include <iostream>
+#include <vector>
+
+using namespace std;
+class Medicamente
+{
+public:
+    virtual ostream& Afisare(ostream&) const=0;
+    virtual istream& Citire(istream&) =0;
+};
+ class Sirop:public Medicamente
+{
+protected:
+    int dozaj;
+    int nrEfecte;
+    string expirare;
+    bool gust;
+public:
+    friend ostream& operator << (ostream&, const Sirop&);
+    friend istream& operator >> (istream&, Sirop&);
+    Sirop();
+    Sirop(int nrEfecte,int dozaj,bool gust,string expirare);
+    Sirop(int nrEfecte,int dozaj,bool gust);
+    Sirop(const Sirop& obj)
+    {
+        this->gust = obj.gust;
+        this->expirare = obj.expirare;
+        this->dozaj=obj.dozaj;
+        this->nrEfecte=obj.nrEfecte;
+
+    }
+    Sirop& operator = (const Sirop& obj);
+
+    istream& Citire(istream& in)
+    {
+        cout << "Introduceti 1 pentru gustul dulce al siropului sau 0 pentru amar : ";
+        in >> this->gust;
+        cout << "Introduceti numarul efecte al siropului: ";
+        in >> this->nrEfecte;
+        cout<<"Introduceti dozajul siropului: ";
+        in>>this->dozaj;
+        cout<<"Introduceti expirarea siropului: ";
+        in>>this->expirare;
+        return in;
+    }
+     ostream& Afisare(ostream& out) const
+    {
+    out<<"Dozaj siropului: "<<this->dozaj<<endl;
+    out<<"Gustul siropului: "<<this->gust<<endl;
+    out<<"Expirare sirop: "<<this->expirare<<endl;
+    out<<"Numar efecte ale siropului:" <<this->nrEfecte<<endl;
+        return out;
+    }
+
+      virtual  ~Sirop(){}
+
+};
+Sirop :: Sirop()
+    {
+        this->expirare="data neidentificata";
+        this->nrEfecte=0;
+        this->gust=NULL;
+        this->dozaj=0;
+    }
+Sirop :: Sirop(int nrEfecte,int dozaj,bool gust,string expirare):nrEfecte(nrEfecte),dozaj(dozaj),gust(gust),expirare(expirare)
+{}
+
+Sirop :: Sirop(int nrEfecte,int dozaj,bool gust):nrEfecte(nrEfecte),
+                               dozaj(dozaj),gust(gust)
+{
+    this->expirare="data de expirare neidentificata";
+}
+
+Sirop& Sirop :: operator = (const Sirop& obj)
+    {
+        if(this!=&obj)
+        {
+        this->nrEfecte = obj.nrEfecte;
+        this->gust = obj.gust;
+        this->expirare = obj.expirare;
+        this->dozaj=obj.dozaj;
+        }
+
+        return *this;
+    }
+ostream& operator << (ostream &out, const Sirop &obj)
+{
+    return obj.Afisare(out);
+
+}
+
+istream& operator >> (istream &in, Sirop &obj)
+{
+    return obj.Citire(in);
+
+}
+ void AfiseazaA()
+    {
+    cout << "     |___|" << endl;
+    cout << "     |___|" << endl;
+    cout << "    /     \\" << endl;
+    cout << "   /       \\" << endl;
+    cout << "  |         |" << endl;
+    cout << "  |  Sirop  |" << endl;
+    cout << "  |         |" << endl;
+    cout << "   \\_______/" << endl;
+}
+class SiropGat : public Sirop
+{
+private:
+    string efecteGat;
+public:
+    SiropGat() : Sirop(), efecteGat(efecteGat) {}
+    SiropGat(int nrEfecte, int dozaj, bool gust,string expirare,string efecteGat) : Sirop(nrEfecte,dozaj,gust,expirare)
+    {
+     this->efecteGat=efecteGat;
+    }
+    SiropGat(const SiropGat &obj):Sirop(obj) { this->efecteGat=obj.efecteGat; }
+    SiropGat& operator = (const SiropGat &obj)
+    {
+        if(this!=&obj)
+        {
+            Sirop::operator=(obj);
+            this->efecteGat=obj.efecteGat;
+        }
+        return *this;
+    }
+    virtual ostream& Afisare(ostream& out) const
+     {
+        Sirop::Afisare(out);
+        out << "Efecte pentru gat: " << this->efecteGat << endl;
+        return out;
+    }
+           virtual  istream& Citire(istream& in)
+    {
+        Sirop::Citire(in);
+        cout << "Efecte pentru gat: ";
+        in >> this->efecteGat;
+        return in;
+    }
+};
+
+class SiropStomac : public Sirop {
+private:
+    string efecteStomac;
+public:
+    SiropStomac() : Sirop(), efecteStomac("efecte de stomac") {}
+    SiropStomac(int nrEfecte, int dozaj, bool gust, const string& expirare, const string& efecteStomac)
+        : Sirop(nrEfecte, dozaj, gust, expirare), efecteStomac(efecteStomac) {}
+    SiropStomac(const SiropStomac &obj):Sirop(obj) { this->efecteStomac=obj.efecteStomac; }
+    SiropStomac& operator = (const SiropStomac &obj)
+    {
+        if(this!=&obj)
+        {
+            Sirop::operator=(obj);
+            this->efecteStomac=obj.efecteStomac;
+        }
+        return *this;
+    }
+    virtual ostream& Afisare(ostream& out) const
+     {
+        Sirop::Afisare(out);
+        out << "Efecte pentru stomac: " << this->efecteStomac << endl;
+        return out;
+    }
+       virtual  istream& Citire(istream& in)
+    {
+        Sirop::Citire(in);
+        cout << "Efecte pentru stomac: ";
+        in >> this->efecteStomac;
+        return in;
+    }
+};
+
+ ////
+class Pastile:Medicamente
+{
+protected:
+    int nrSubstante;
+    int dozaj;
+    int nrEfecte;
+    string modAdministrare;
+    bool expirare;
+public:
+    friend ostream& operator << (ostream&, const Pastile&);
+    friend istream& operator >> (istream&, Pastile&);
+    Pastile();
+    Pastile(int nrEfecte,int nrSubstante,bool expirare,string modAdministrare, int dozaj);
+    Pastile(int nrEfecte,int nrSubstante,bool expirare);
+    Pastile(const Pastile& obj)
+    {
+        this->modAdministrare = obj.modAdministrare;
+        this->nrSubstante = obj.nrSubstante;
+        this->expirare = obj.expirare;
+        this->dozaj=obj.dozaj;
+        this->nrEfecte=obj.nrEfecte;
+    }
+    Pastile& operator = (const Pastile& obj);
+    virtual istream& Citire(istream& in)
+    {
+        cout << "Introduceti numarul de substante din pastile: ";
+        in >> this->nrSubstante;
+        cout << "Introduceti numarul efecte pastile: ";
+        in >> this->nrEfecte;
+        cout<<"Introduceti dozajul pastilelelor: ";
+        in>>this->dozaj;
+        cout<<"Introduceti modul de administrare al pastilelor: ";
+        in>>this->modAdministrare;
+        cout<<"Introduceti expirarea pastilelor: ";
+        in>>this->expirare;
+        return in;
+    }
+     virtual ostream& Afisare(ostream& out) const
+    {
+    out<<"Dozaj pastile: "<<this->dozaj<<endl;
+    out<<"Mod de administrare pastile: "<<this->modAdministrare<<endl;
+    out<<"Expirare pastile: "<<this->expirare<<endl;
+    out<<"Numar efecte:" <<this->nrEfecte<<endl;
+    out<<"Numar substante:" <<this->nrSubstante<<endl;
+        return out;
+    }
+        int calculeazaImpact() const
+    {
+        return (dozaj * nrSubstante) - nrEfecte;
+    }
+    virtual float calculeazaPret() const  { return (nrEfecte + nrSubstante) * 1.5;  }
+
+
+      virtual  ~Pastile(){}
+
+};
+Pastile :: Pastile()
+    {
+        this->nrSubstante=0;
+        this->modAdministrare="de baza";
+        this->nrEfecte=0;
+        this->expirare=NULL;
+        this->dozaj=0;
+    }
+
+Pastile :: Pastile(int nrEfecte,int nrSubstante,bool expirare,string modAdministrare, int dozaj):nrEfecte(nrEfecte),
+                               nrSubstante(nrSubstante),dozaj(dozaj),modAdministrare(modAdministrare),expirare(expirare){}
+
+Pastile :: Pastile(int nrEfecte,int nrSubstante,bool expirare):nrEfecte(nrEfecte),nrSubstante(nrSubstante),expirare(expirare)
+{
+    this->dozaj=0;
+    this->modAdministrare="de baza";
+}
+Pastile& Pastile :: operator = (const Pastile& obj)
+    {
+        if(this!=&obj)
+        {
+        this->nrEfecte = obj.nrEfecte;
+        this->modAdministrare=obj.modAdministrare;
+        this->nrSubstante = obj.nrSubstante;
+        this->expirare = obj.expirare;
+        this->dozaj=obj.dozaj;
+        }
+        return *this;
+    }
+        void AfiseazaPastile()
+    {
+    cout << "***************" << endl;
+    cout << "*             *" << endl;
+    cout << "* Cutie de    *" << endl;
+    cout << "*   Pastile   *" << endl;
+    cout << "*             *" << endl;
+    cout << "***************" << endl;
+   }
+ostream& operator << (ostream &out, const Pastile &obj)
+{
+    return obj.Afisare(out);
+
+}
+
+istream& operator >> (istream &in, Pastile &obj)
+{
+    return obj.Citire(in);
+
+}
+class PastileGat:public virtual Pastile
+{
+protected:
+    string substanta;
+public:
+    PastileGat();
+    PastileGat(int nrEfecte,int nrSubstante,bool expirare,string modAdministrare,int dozaj,string substanta);
+    PastileGat(int nrEfecte,int nrSubstante,bool expirare);
+   //copy
+    PastileGat(const PastileGat &obj):Pastile(obj) { this->substanta=obj.substanta; }
+    PastileGat& operator = (const PastileGat &obj);
+    virtual ostream& Afisare(ostream& out) const
+    {
+        Pastile::Afisare(out);
+        out << "Substanta: " << this->substanta<<endl;
+        return out;
+    }
+    virtual  istream& Citire(istream& in)
+    {
+        Pastile::Citire(in);
+        cout << "Substanta: ";
+        in >> this->substanta;
+        return in;
+    }
+    int calculeazaEficacitate() const  {
+        int eficacitate = (nrEfecte * dozaj) / 2;
+        if (this->modAdministrare=="Oral")
+            eficacitate+=5;
+        if (this->expirare!=0)
+            eficacitate-=10;
+        return eficacitate;
+    }
+     virtual float calculeazaPret() const  {
+        return (this->nrEfecte + this->nrSubstante+this->dozaj) * 1.5;
+    }
+      ~PastileGat(){}
+};
+   PastileGat :: PastileGat():Pastile() { this->substanta="substanta de baza";}
+   PastileGat ::  PastileGat(int nrEfecte,int nrSubstante,bool expirare,string modAdministrare,int dozaj,string substanta):Pastile(nrEfecte,
+            nrSubstante,expirare,modAdministrare,dozaj)
+    {
+        this->substanta=substanta;
+    }
+    PastileGat :: PastileGat(int nrEfecte,int nrSubstante,bool expirare):Pastile(nrEfecte,nrSubstante,expirare){  this->substanta=substanta; }
+    PastileGat& PastileGat :: operator = (const PastileGat &obj)
+    {
+        if(this!=&obj)
+        {
+            Pastile::operator=(obj);
+            this->substanta=obj.substanta;
+        }
+        return *this;
+    }
+
+
+class PastileCap:public virtual Pastile
+{
+protected:
+    string substantaCap;
+    int nrOre;
+public:
+    PastileCap();
+    PastileCap(int nrEfecte,int nrSubstante,bool expirare,string modAdministrare,int dozaj,string substantaCap,int nrOre);
+    PastileCap(int nrEfecte,int nrSubstante,bool expirare);
+   //copy
+    PastileCap(const PastileCap &obj):Pastile(obj)
+    {
+         this->substantaCap=substantaCap;
+         this->nrOre=nrOre;
+    }
+    PastileCap& operator = (const PastileCap &obj);
+    string getSubstantaCap() const { return substantaCap; }
+    int getNrOre() const { return nrOre;}
+    void setSubstantaCap(string substantaCap ) { this->substantaCap=substantaCap ;}
+    void setNrOre(int nrOre) { this->nrOre=nrOre;}
+    virtual ostream& Afisare(ostream& out) const
+    {
+        this->Pastile::Afisare(out);
+        out << "Substanta ce amelioreaza durere de cap: " << this->substantaCap<<endl;
+        out << "Numarul de ore pana isi face efectul: " << this->nrOre<<endl;
+        return out;
+    }
+    virtual istream& Citire(istream& in)
+    {
+        this->Pastile::Citire(in);
+        cout << "Substanta de cap: ";
+        in >> this->substantaCap;
+        cout << "Numarul de ore pana isi face efectul: ";
+        in >> this->nrOre;
+        return in;
+    }
+    int calculeazaEficacitatea() const  {
+        int eficacitate = nrEfecte + dozaj;
+        if (this->substantaCap == "paracetamol" || this->substantaCap == "ibuprofen")
+        {
+            eficacitate += 10;
+        }
+        eficacitate -= this->nrOre / 2;
+
+        return eficacitate;
+    }
+        virtual float calculeazaPret() const
+     {
+        float costPerEfect = 1.0;
+        float costPerSubstanta = 1.0;
+        return this->nrEfecte*costPerEfect+this->nrSubstante*costPerSubstanta+this->dozaj;
+    }
+
+      ~PastileCap(){}
+};
+    PastileCap :: PastileCap():Pastile()
+    {
+        this->substantaCap="substanta de baza";
+        this->nrOre=0;
+    }
+    PastileCap :: PastileCap(int nrEfecte,int nrSubstante,bool expirare,string modAdministrare,int dozaj,string substantaCap,int nrOre):Pastile(nrEfecte,
+            nrSubstante,expirare,modAdministrare,dozaj)
+    {
+        this->substantaCap=substantaCap;
+        this->nrOre=nrOre;
+    }
+    PastileCap :: PastileCap(int nrEfecte,int nrSubstante,bool expirare):Pastile(nrEfecte,nrSubstante,expirare)
+    {
+        this->substantaCap=substantaCap;
+        this->nrOre=nrOre;
+    }
+        PastileCap& PastileCap :: operator = (const PastileCap &obj)
+    {
+        if(this!=&obj)
+        {
+            Pastile::operator=(obj);
+            this->substantaCap=obj.substantaCap;
+        }
+        return *this;
+    }
+
+class Antibiotic:public PastileCap,public PastileGat
+{
+private:
+    string boalaPeZi[4];
+public:
+    Antibiotic();
+   Antibiotic(int nrEfecte, int nrSubstante, bool expirare, string modAdministrare, int dozaj,
+        string substantaCap, int nrOreCap,string substanta,string boalaPeZi[4]);
+    //copy
+     Antibiotic(const Antibiotic &obj):Pastile(obj),PastileGat(obj),PastileCap(obj)
+    {
+        for (int i = 0; i < 4; i++)
+        { boalaPeZi[i] = obj.boalaPeZi[i]; }
+    }
+    Antibiotic& operator = (const Antibiotic &obj);
+    void setBoalaPeZi(int zi, const string& descriere) {
+        if (zi >= 0 && zi < 4)
+            boalaPeZi[zi] = descriere;
+         else
+            cout << "Zi invalida!\n";
+    }
+    string getBoalaPeZi(int zi) const
+    {
+        if (zi >= 0 && zi < 4) {
+            return boalaPeZi[zi];
+        } else {
+            return "Zi invalida";
+        }
+    }
+
+    void afiseazaInformatiiBoala() const
+    {
+        for (int i = 0; i < 4; ++i)
+            {
+            cout << "Ziua " << i+1 << ": " << boalaPeZi[i] << "\n";
+        }
+    }
+         ostream& Afisare(ostream& out) const
+    {
+        PastileGat::Afisare(out);
+        out << endl;
+        out << "Substanta ce amelioreaza durere de cap: " << getSubstantaCap() << endl;
+        out << "Numarul de ore pana isi face efectul: " << getNrOre()<< endl;
+        out << "Boala pe zi:\n";
+        for (int i = 0; i < 4; ++i)
+        {
+        out << "Ziua " << i + 1 << ": " << boalaPeZi[i] << "\n";
+        }
+        return out;
+    }
+    istream& Citire(istream& in)
+    {
+        this->PastileGat::Citire(in);
+        cout << "Substanta de cap: ";
+        in >> substantaCap;
+        cout << "Numarul de ore pana isi face efectul: ";
+        in >> nrOre;
+        cout << "Introduceti boala pentru fiecare zi:\n";
+
+        for (int i = 0; i < 4; ++i)
+        {
+              cout << "Ziua " << i + 1 << ": ";
+              in >> boalaPeZi[i];
+       }
+
+
+        return in;
+    }
+     string calculeazaDurataTratamentului() const
+     {
+        int durataTratament=0;
+        for (int i = 1; i <= 4; ++i) {
+            if (this->boalaPeZi[i]!="nedefinit") {
+                durataTratament++;
+            }
+        }
+        if (this->boalaPeZi[4] == "vindecat")
+        {
+            return "Tratament finalizat cu succes. Durata totala a tratamentului este: "+to_string(durataTratament)+" zile.";
+        } else
+        {
+            return "Tratamentul a fost efectuat timp de "+to_string(durataTratament)+" zile.";
+        }
+    }
+    virtual float calculeazaPret() const
+     {
+        float costPerEfect = 1.0;
+        float costPerSubstanta = 1.0;
+        return this->nrEfecte*costPerEfect+this->nrSubstante*costPerSubstanta;
+    }
+      ~Antibiotic(){}
+
+};
+    Antibiotic :: Antibiotic() : Pastile(), PastileCap(), PastileGat()
+    {
+       for (int i = 0; i < 4; ++i) {
+        boalaPeZi[i] = "nedefinit";
+    }
+   }
+   Antibiotic :: Antibiotic(int nrEfecte, int nrSubstante, bool expirare, string modAdministrare, int dozaj,
+        string substantaCap, int nrOreCap,string substanta,string boalaPeZi[4]):Pastile(nrEfecte, nrSubstante, expirare, modAdministrare, dozaj),
+      PastileCap(nrEfecte, nrSubstante, expirare, modAdministrare, dozaj,substantaCap,nrOre),
+      PastileGat(nrEfecte, nrSubstante, expirare, modAdministrare, dozaj,substanta)
+    {
+          for (int i = 0; i < 4; i++)
+        {   boalaPeZi[i] = "bine"; }
+    }
+     Antibiotic& Antibiotic :: operator = (const Antibiotic &obj)
+    {
+        if(this!=&obj)
+        {
+            PastileGat::operator=(obj);
+            this->substantaCap=obj.substantaCap;
+            this->nrOre=obj.nrOre;
+        for (int i = 0; i < 4; i++) { boalaPeZi[i] = obj.boalaPeZi[i];}
+
+        }
+        return *this;
+    }
+string recomandareMedicament(const vector<string>& simptome) {
+    bool durereCap = false;
+    bool febra = false;
+    bool alergie = false;
+    bool durereGat = false;
+    string recomandari = "";
+
+    for (const string& simptom : simptome) {
+        if (simptom == "durere de cap" || simptom == "migrena") {
+            durereCap = true;
+        } else if (simptom == "febra") {
+            febra = true;
+        } else if (simptom == "alergie" || simptom == "iritatie") {
+            alergie = true;
+        } else if (simptom == "durere in gat" || simptom == "gat iritat") {
+            durereGat = true;
+        }
+    }
+    if (durereCap )
+    {
+        recomandari+="Pentru durerea de cap, recomandam administrarea paracetamolului si odihna.\n";
+    }
+    if (febra) {
+        recomandari+="Pentru febra, recomandam administrarea paracetamolului si consultarea medicului.\n";
+    }
+    if (alergie) {
+        recomandari+="Pentru alergii, recomandam administrarea unui antihistaminic si evitarea alergenului.\n";
+    }
+    if (durereGat) {
+        recomandari+="Pentru durerea in gat, recomandam clatirea gatului cu apa calda sarata si consultarea medicului.\n";
+    }
+    if (recomandari.empty()) {
+        return "Nu s-au identificat recomandari specifice pentru simptomele introduse.\n";
+    } else {
+        return recomandari;
+    }
+}
+void AfiseazaSacoasaCuBretea() {
+    cout << "        __|__" << endl;
+    cout << "       /    \\" << endl;
+    cout << "      /      \\" << endl;
+    cout << "     /________\\" << endl;
+    cout << "***********************" << endl;
+    cout << "*                     *" << endl;
+    cout << "*   Sacosa cu          *"<< endl;
+    cout << "*      medicamente    *" << endl;
+    cout << "*                     *" << endl;
+    cout << "***********************" << endl;
+}
+int main()
+{
+    vector<Pastile*> pastileMulte;
+    int k = 1;
+
+    while (k == 1)
+    {
+        cout << "=============================================" << endl;
+        cout << "  Bine ati venit la managementul pastilelor  " << endl;
+        cout << "=============================================" << endl;
+        cout << " Alege o optiune: " << endl;
+        cout << "1. Adauga pastile pentru durerea de cap" << endl;
+        cout << "2. Adauga pastile pentru durerea de gat" << endl;
+        cout << "3. Afiseaza toate pastilele" << endl;
+        cout << "4. Exit" << endl;
+        cout << "5. Antibiotic" << endl;
+        cout << "6. Functionalitate" << endl;
+        cout << "7. Sirop" << endl;
+        cout << "=============================================" << endl;
+        cout << "Selectia ta este: ";
+
+        int val;
+        cin >> val;
+
+        switch (val)
+        {
+        case 1:
+        {
+            cout << "Adaug pastile pentru durerea de cap..." << endl;
+            Pastile* p = new PastileCap;
+            cin >> *p;
+            pastileMulte.push_back(p);
+            cout << "Pastilele pentru durerea de cap au fost adaugate cu succes!" << endl;
+            break;
+        }
+        case 2:
+        {
+            cout << "Adaug pastile pentru durerea de gat..." << endl;
+            Pastile* p = new PastileGat;
+            cin >> *p;
+            pastileMulte.push_back(p);
+            cout << "Pastilele de gat au fost adaugate cu succes!" << endl;
+            break;
+        }
+        case 3:
+        {
+            cout << "=============================================" << endl;
+            cout << "          Afisarea tuturor pastilelor        " << endl;
+            cout << "=============================================" << endl;
+            for (size_t i = 0; i < pastileMulte.size(); ++i)
+            {
+                cout<<*pastileMulte[i]<<endl;
+            }
+            AfiseazaPastile();
+            break;
+        }
+        case 4:
+        {
+            cout << "Exiting  Managementul Pastilelor..." << endl;
+            for (size_t i = 0; i < pastileMulte.size(); ++i)
+            {
+                delete pastileMulte[i];
+            }
+            pastileMulte.clear();
+            k = 0;
+            break;
+        }
+        case 5:
+         {
+            cout << "Adaugand Antibiotic..." << endl;
+            Pastile* p = new Antibiotic;
+            cin >> *p;
+            pastileMulte.push_back(p);
+            cout << "Antibioticul a fost adaugat cu succes!" << endl;
+            break;
+           }
+        case 6:
+            {
+            vector<string> simptome;
+            int nrSimptome;
+            cout << "Introduceti numarul de simptome: ";
+            cin >> nrSimptome;
+            cin.ignore();
+
+            cout << "Introduceti simptomele:\n";
+            for (int i = 0; i < nrSimptome; ++i)
+            {
+                    string simptom;
+                    cout << "Simptomul " << i + 1 << ": ";
+                    getline(cin, simptom);
+                    simptome.push_back(simptom);
+            }
+            string recomandari = recomandareMedicament(simptome);
+            cout << "\nRecomandarile sunt:\n" << recomandari;
+            AfiseazaSacoasaCuBretea();
+            break;
+
+            }
+        case 7:
+            {
+                Sirop s;
+                cin>>s;
+                cout<<s;
+                AfiseazaA();
+                break;
+            }
+        default:
+            cout << "Optiune invalida! Te rog sa alegi din nou." << endl;
+            break;
+        }
+    }
+
+    return 0;
+}
